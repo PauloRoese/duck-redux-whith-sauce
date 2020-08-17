@@ -1,41 +1,18 @@
-
-export const Types = {
-    add: 'ADD_ITEM',
-    remove: 'REMOVE_ITEM'
-}
-
+import { createActions, createReducer } from 'reduxsauce';
 
 export const INITIALIZE_STATE = []
 
-const reducerItems = (state = INITIALIZE_STATE, action) => {
-
-    switch (action.type) {
-        case Types.add:
-            return [{ id: Math.random(), text: action.payload.text }, ...state]
-        case Types.remove:
-            return state.filter(item => item.id !== action.payload.id)
-        default:
-            return state;
-    }
-
-}
-
-export const Creators = {
-
-    addItem: (text) => ({
-        type: Types.add,
-        payload: {
-            text
-        }
-    }),
-
-    removeItem: (id) => ({
-        type: Types.remove,
-        payload: {
-            id
-        }
-    })
-
-}
-
-export default reducerItems;
+export const { Types, Creators } = createActions({
+    addItem: ['text'],
+    removeItem: ['id']
+})
+export const add = (state = INITIALIZE_STATE, action) => (
+    [{ id: Math.random(), text: action.text }, ...state]
+)
+export const remove = (state = INITIALIZE_STATE, action) => (
+    state.filter(item => item.id !== action.id)
+)
+export default createReducer(INITIALIZE_STATE, {
+    [Types.ADD_ITEM]: add,
+    [Types.REMOVE_ITEM]: remove,
+});
